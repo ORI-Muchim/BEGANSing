@@ -1,0 +1,10 @@
+.DS_Store
+__pycache__
+/TEMP
+*.pyd
+.venv
+weights/
+hubert_base.pt
+pretrained_v2/f0D48k.pth
+pretrained_v2/f0G48k.pth
+rmvpe.pt
