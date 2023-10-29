@@ -33,6 +33,7 @@ def get_model():
         directory = './RVC/pretrained_v2'
         directory2 = './RVC'
         directory3 = './checkpoint/default'
+        directory4 = 'hifi-gan/default'
 
         pretrained_discriminator_model = os.path.join(directory, 'f0D48k.pth')
         pretrained_generator_model = os.path.join(directory, 'f0G48k.pth')
