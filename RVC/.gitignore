@@ -4,6 +4,7 @@ __pycache__
 *.pyd
 .venv
 weights/
+logs/kss
 hubert_base.pt
 pretrained_v2/f0D48k.pth
 pretrained_v2/f0G48k.pth

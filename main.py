@@ -5,6 +5,10 @@ import argparse
 from main_util import update_text_file_in_yaml, find_index_files
 from get_models import get_model
 
+if len(sys.argv) < 4:
+    print("Usage: python main.py <model_name> <song_name> <f0_up_key> [--audiosr]")
+    sys.exit(1)
+
 # Init
 model_name = sys.argv[1]
 song_name = sys.argv[2]
@@ -17,7 +21,7 @@ f0_method = "rmvpe"  # pm or harvest or crepe or rmvpe
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--audiosr', action='store_true', help='Enable audio processing')
-args = parser.parse_args()
+args = parser.parse_args(sys.argv[4:])
 
 yaml_path = "./config/default_infer.yml"
 update_text_file_in_yaml(yaml_path)

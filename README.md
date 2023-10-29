@@ -86,7 +86,7 @@ This is just an example, and it's okay to add more speakers.
 
 # Preprocessing & Training
 
-This pre-trained model is a model in which an additional 100 epochs was trained through transfer learning. For additional learning, see [Preprocessing](https://github.com/SoonbeomChoi/BEGANSing#preprocessing), [Training](https://github.com/SoonbeomChoi/BEGANSing#training) in the original repository.
+This pre-trained model is a model in which an additional 100 epochs was trained. For Preprocessing and Training, see [Preprocessing](https://github.com/SoonbeomChoi/BEGANSing#preprocessing), [Training](https://github.com/SoonbeomChoi/BEGANSing#training) in the original repository.
 
 
 # Usage
