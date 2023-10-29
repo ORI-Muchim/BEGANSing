@@ -12,6 +12,8 @@ def get_model():
         url5 = 'https://github.com/ORI-Muchim/BEGANSing/releases/download/v1.0/latest_D.pt'
         url6 = 'https://github.com/ORI-Muchim/BEGANSing/releases/download/v1.0/latest_G.pt'
         url7 = 'https://github.com/ORI-Muchim/BEGANSing/releases/download/v1.0/default_train.yml'
+        url8 = 'https://github.com/ORI-Muchim/BEGANSing/releases/download/v1.0/do_02500000'
+        url9 = 'https://github.com/ORI-Muchim/BEGANSing/releases/download/v1.0/g_02500000'
 
         print("Downloading Pretrained Discriminator Model...")
         response1 = requests.get(url1, allow_redirects=True)
@@ -29,6 +31,10 @@ def get_model():
         response5 = requests.get(url5, allow_redirects=True)
         response6 = requests.get(url6, allow_redirects=True)
         response7 = requests.get(url7, allow_redirects=True)
+        
+        print("Downloading HiFi-GAN Checkpoint...")
+        response8 = requests.get(url8, allow_redirects=True)
+        response9 = requests.get(url9, allow_redirects=True)
 
         directory = './RVC/pretrained_v2'
         directory2 = './RVC'
@@ -42,6 +48,8 @@ def get_model():
         begansing_check_D_model = os.path.join(directory3, 'latest_D.pt')
         begansing_check_G_model = os.path.join(directory3, 'latest_G.pt')
         begansing_config = os.path.join(directory3, 'default_train.yml')
+        hifigan_D_model = os.path.join(directory4, 'do_02500000')
+        hifigan_G_model = os.path.join(directory4, 'g_02500000')
         
         with open(pretrained_discriminator_model, 'wb') as file:
             file.write(response1.content)
@@ -70,5 +78,14 @@ def get_model():
         with open(begansing_config, 'wb') as file:
             file.write(response7.content)
         print("Saving BEGANSing Config File...")
+        
+        with open(hifigan_D_model, 'wb') as file:
+            file.write(response8.content)
+        print("Saving HiFi-GAN Discriminator Model...")
+        
+        with open(hifigan_G_model, 'wb') as file:
+            file.write(response9.content)
+        print("Saving HiFi-GAN Generator Model...")
+        
     else:
         print('Skipping Download... Model exists.')

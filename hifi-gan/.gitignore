@@ -1,2 +1,4 @@
 default/wavs
-cp_hifigan/
+cp_hifigan/config.json
+cp_hifigan/do_02500000
+cp_hifigan/g_02500000
