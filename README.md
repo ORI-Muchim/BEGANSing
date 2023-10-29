@@ -1,6 +1,6 @@
-# Korean Singing Voice Synthesis based on Auto-regressive Boundary Equilibrium GAN
+# BEGANSing + RVC + AudioSuperResolution
 
-## Korean singing voice synthesis system using deep neural network
+## Korean Singing Voice Synthesis + Singing Voice Conversion(SVS + SVC)
 
 The system generates singing voice from a given text and MIDI in an end-to-end manner. 
 
@@ -8,75 +8,96 @@ The system generates singing voice from a given text and MIDI in an end-to-end m
 ![model architecture final 2 3](https://user-images.githubusercontent.com/15067112/81911402-3917fe80-9608-11ea-9718-8a61b564a618.jpg)
 <p align="center"><b>Overview of the proposed system</b></p>
 
-# Table of Contents 
-- [Prerequisites](#pre-requisites)
-- [Dataset](#dataset)
+# Contents
+- [Installation](#installation)
+- [Prepare Datasets](#prepare-dataset)
 - [Configuration](#configuration)
-- [Preprocessing](#preprocessing)
-- [Training](#training)
-- [Inference](#inference)
+- [Preprocessing & Training](#preprocessing--training)
+- [Usage](#usage)
 - [Results](#results)
 - [References](#references)
 
-# Pre-requisites
-- Install PyTorch based on official website, https://pytorch.org/.
-- PyTorch version == 1.9.0
-```bash
-pip install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
+## Installation
+- A Windows/Linux system with a minimum of `16GB` RAM.
+- A GPU with at least `12GB` of VRAM.
+- Python >= 3.8
+- Anaconda installed.
+- Pytorch installed.
+- CUDA 11.7 installed.
+
+Pytorch install command:
+```sh
+pip install torch==2.0.1 torchvision==0.15.2 torchaudio==2.0.2 --index-url https://download.pytorch.org/whl/cu118
 ```
-- Then install packages in requirements.txt.
-```bash
+
+CUDA 11.8 install:
+```sh
+https://developer.nvidia.com/cuda-11-8-0-download-archive
+```
+
+---
+
+1. **Create an Anaconda environment:**
+
+```sh
+conda create -n begansing python=3.9
+```
+
+2. **Activate the environment:**
+
+```sh
+conda activate begansing
+```
+
+3. **Clone this repository to your local machine:**
+
+```sh
+git clone https://github.com/ORI-Muchim/BEGANSing.git
+```
+
+4. **Navigate to the cloned directory:**
+
+```sh
+cd BEGANSing
+```
+
+5. **Install the necessary dependencies:**
+
+```sh
 pip install -r requirements.txt
 ```
 
-# Dataset
+---
 
-[Children's Song Dataset](https://zenodo.org/record/4785016)
+# Prepare Dataset
+Inside the cloned folder, there is a folder called `./test_datasets`. You can put the MIDI file and text file in it according to the format. MIDI and text should be arranged in the same number unconditionally. As an example, I will provide GFRIEND's "Running Through Time" MIDI and text. And for the dataset to change the voice from the generated vocals, you can create a folder with the speaker's name in the `./datasets` folder and put voice data for Retrieval Voice Conversion (RVC) in it. The following shows the ./datasets format.
 
-- Each song must have text(.txt), MIDI(.mid) and audio(.wav) and MIDI should be temporally aligned with audio.
-- Text files assume to have the same number of syllables as MIDI notes. The text is aligned using MIDI note duration.
-- Currently the system only supports Korean.
+```
+BEGANSing
+├────datasets
+│       ├───kss
+│       │   ├────1_0000.wav
+│       │   ├────1_0001.wav
+│       │   └────...
+│       ├───{speaker_name}
+│       │    ├───1.wav
+└───────└────└───2.wav
+```
+This is just an example, and it's okay to add more speakers.
 
-# Configuration
-Check configuration files in 'config' folder.
-- default_train.yml: Default configuration file for preprocess.py and train.py
-- default_infer.yml: Default configuration file for infer.py
+# Preprocessing & Training
 
-Change configurations before you run following steps and important parameters are as below.
-- file_structure: File structure of dataset, 1: all the files in one folder, 2: .txt, .mid, .wav are in separated folders
-- dataset_path: Path for dataset
-- num_proc: The number of processes especially for preprocess.py
-- use_cpu: Forcing code to use cpu and ignore 'device' parameter
-- device: List of CUDA device indices (e.g. device: [0, 1] will use cuda:0 and cuda:1)
-- batch_size: Training batch size
-- data_mode: Dataloader mode, single: loading entire data on memory, multi: loading data with queue
+This pre-trained model is a model in which an additional 100 epochs was trained through transfer learning. For additional learning, see [Preprocessing](https://github.com/SoonbeomChoi/BEGANSing#preprocessing), [Training](https://github.com/SoonbeomChoi/BEGANSing#training) in the original repository.
 
-# Preprocessing
+
+# Usage
 ```bash
-python preprocess.py -c config/default_train.yml --use_cpu True
+python main.py {speaker_name} {song} {pitch_shift} --audiosr
 ```
 
-You can speed up preprocessing by increasing the number of processes or 'num_proc'.
-You can use preprocess.py with GPU but 'num_proc' should be 1.
+If the speaker is male, it is recommended to set the {pitch_shift} value to `-12`, and if she is female, set it to `0`.
 
-# Training
-```bash
-python train.py -c config/default_train.yml --device 0 --batch_size 32
-```
-
-If your system doesn't have enough memory, you can change 'data_mode' to 'multi' which loads data with queue.
-Also type following command for tensorboard monitoring.
-```bash
-tensorboard --logdir=checkpoint/csd
-```
-
-# Inference
-```bash
-python infer.py -c config/default_train.yml config/default_infer.yml --device 0
-```
-
-Specify text file and checkpoint file in the configuration and MIDI file is assumed to have same file name as text file. Together with train configuration, infer configuration is given then the configurations are merged.
-You can also use pre-trained model from https://drive.google.com/file/d/1JqCD-kxba2meSlApWr06b2nzqLv3U-j_/view?usp=sharing (edit link).
+The `--audiosr` option up-samples a voice generated at 22050hz to 48000hz. Use this option for those who have excellent graphics cards or don't mind taking a long time to generate a voice, or remove it if not.
 
 # Results
 Audio samples at: https://soonbeomchoi.github.io/saebyulgan-blog/. Model was trained at RTX3090 24GB with batch size 32 for 2 days.

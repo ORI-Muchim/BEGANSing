@@ -1,7 +1,9 @@
 import os
 import sys
 import shutil
+import argparse
 from main_util import update_text_file_in_yaml, find_index_files
+from get_models import get_model
 
 # Init
 model_name = sys.argv[1]
@@ -11,10 +13,17 @@ input_path = f"../samples/latest_G_{song_name}.wav"
 output_path = f"../samples/latest_G_{song_name}.wav"
 model_path = f"./weights/{model_name}.pth"
 device = "cuda:0"
-f0_method = "rmvpe"  # pm or harvest or crepe
+f0_method = "rmvpe"  # pm or harvest or crepe or rmvpe
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--audiosr', action='store_true', help='Enable audio processing')
+args = parser.parse_args()
 
 yaml_path = "./config/default_infer.yml"
 update_text_file_in_yaml(yaml_path)
+
+# Download Necessary Models / Files
+get_model()
 
 # BEGANSing Inference
 os.system(f"python infer.py -c config/default_train.yml config/default_infer.yml --device 0")
@@ -43,7 +52,8 @@ os.system(f"ffmpeg -y -i {output_path} -ar 22050 -ac 1 {temp_output_path}")
 shutil.move(temp_output_path, output_path)
 
 # AudioSR-Upsampling
-os.chdir("../AudioSR-Upsampling")
-os.system(f"python main.py")
+if args.audiosr:
+    os.chdir("../AudioSR-Upsampling")
+    os.system("python main.py")
 
 print("All Process Finished.")
