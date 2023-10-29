@@ -1,0 +1,10 @@
+# Path Configuration
+file_structure: 2 # File structure type, 1: all the files in one folder, 2: .txt, .mid, .wav are in separated folders
+text_file: 'test_datasets/txt\time.txt'     # Text file path for inference
+checkpoint_file: 'checkpoint/default/latest_G.pt' # Model checkpoint file path to load
+
+# Infer Configuration
+num_proc: 1 # Number of processes, might be used for non-auto-regressive inference
+batch_size: 1 # Inference batch size, might be used for non-auto-regressive inference
+use_cpu: true # Forcing code to use cpu and ignore 'device'
+device: [0] # List of CUDA device indices

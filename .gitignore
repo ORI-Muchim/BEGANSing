@@ -1,0 +1,11 @@
+__pycache__/
+feature/
+singing_datasets/
+*.DS_Store
+*.pyd
+*.swp
+*.DS*
+*__pycache__*
+*.pyc
+checkpoint/
+RVC/

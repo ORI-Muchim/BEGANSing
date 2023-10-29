@@ -1,0 +1,50 @@
+# Path Configuration
+file_structure: 2 # File structure type, 1: all the files in one folder, 2: .txt, .mid, .wav are in separated folders
+dataset_path: 'singing_datasets' # Path for raw dataset containing txt, mid, wav
+feature_path: 'feature/default' # Path for feature created using preprocess.py
+checkpoint_path: 'checkpoint/default' # Path for checkpoint and tensorboard log created using train.py
+checkpoint_path_action: 'overwrite' # Action to make path for checkpoint
+
+# Feature Configuration 
+num_char: 47 # The types of characters
+min_note: 51 # Minimum MIDI note value
+num_note: 29 # The number of MIDI notes
+length_c: 3 # Specificed consonant length
+
+sample_rate: 44100 # Audio sampling rate  
+preemphasis: 0.97 # Pre-emphasis filter coefficient
+min_db: -80.0 # Minimum dB level of spectrogram
+max_db: 20.0 # Maximum dB level of spectrogram
+clip_val: 0.8 # Maximum value of normalized spectrogram (if clip_val: 0.8, normalized spectrogram range: -0.8 ~ 0.8)
+spec_power: 1.3
+
+fft_size: 1024 # FFT size for fast-Fourier transform 
+win_size: 1024 # Window size for fast-Fourier transform 
+hop_size: 256 # Hop size for fast-Fourier transform 
+
+spec_length: 97 # The length of generated spectrogram per iteration
+prev_length: 32 # The length of previous-time spectrogram per iteration
+data_stride: 32 # Amount of stride to increase the number of data in a epoch
+
+# Model Configuration
+size_factor: 48 # Factor for model size
+text_embed_size: 256 # Embedding dimension for text
+note_embed_size: 32 # Embedding dimension for note
+gamma: 1.0 # Gamma value for BEGAN objective
+lambda_k: 0.001 # Lambda k value for BEGAN objective
+
+# Optimizer Configuration
+learn_rate: 1.0E-4 # Learning rate for training
+decay_factor: 0.5 # Learning rate decay amount per every step epoch
+step_epoch: 50 # Step epoch for learning rate decay
+betas: [0.5, 0.999] # Beta values for Adam optimizer
+weight_decay: 1.0E-5 # Weight decay value
+
+# Train Configuration
+num_proc: 1 # The number of processes especially for preprocess.py
+use_cpu: false # Forcing code to use cpu and ignore 'device'
+device: [0] # List of CUDA device indices
+batch_size: 16 # Training batch size 
+data_mode: 'single' # Dataloader mode, single: data on memory, multi: loading data with queue
+save_epoch: 25 # Step epoch for saving checkpoint 
+stop_epoch: 500 # Epoch for stopping training
