@@ -2,7 +2,7 @@ import os
 import subprocess
 import re
 
-def get_max_volume(input_path):
+def audio_normalize(input_path):
     command = [
         'ffmpeg',
         '-i', input_path,
@@ -27,7 +27,7 @@ def convert_sample_rate_with_ffmpeg(directory, target_sample_rate=22050):
             input_path = os.path.join(directory, filename)
             output_path = os.path.join(output_directory, filename)
             
-            max_volume = get_max_volume(input_path)
+            max_volume = audio_normalize(input_path)
             if max_volume is not None:
                 volume_adjust = 0 - max_volume
             else:
