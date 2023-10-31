@@ -36,7 +36,7 @@ def inference(a):
     generator = Generator(h).to(device)
 
     state_dict_g = load_checkpoint(a.checkpoint_file, device)
-    generator.load_state_dict(state_dict_g['generator'])
+    generator.load_state_dict(state_dict_g['generator'], strict= False)
 
     filelist = os.listdir(a.input_mels_dir)
 
@@ -48,6 +48,10 @@ def inference(a):
         for i, filname in enumerate(filelist):
             x = np.load(os.path.join(a.input_mels_dir, filname))
             x = torch.FloatTensor(x).to(device)
+            if len(x.shape) < 3:
+              x = x.unsqueeze(0)
+            if not x.shape[1] == h.num_mels:
+              x = x.transpose(1, 2) 
             y_g_hat = generator(x)
             audio = y_g_hat.squeeze()
             audio = audio * MAX_WAV_VALUE
