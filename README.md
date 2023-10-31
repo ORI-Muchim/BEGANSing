@@ -69,7 +69,7 @@ pip install -r requirements.txt
 ```
 
 # Prepare Dataset
-Inside the cloned folder, there is a folder called `./test_datasets`. You can put the MIDI file and text file in it according to the format. MIDI and text should be arranged in the same number unconditionally. As an example, I will provide GFRIEND's "Running Through Time" MIDI and text. And for the dataset to change the voice from the generated vocals, you can create a folder with the speaker's name in the `./datasets` folder and put voice data for Retrieval Voice Conversion (RVC) in it. The following shows the ./datasets format.
+Inside the cloned folder, there is a folder called `./test_datasets`. You can put the MIDI file and text file in it according to the format. MIDI and text should be arranged in the same number unconditionally. As an example, I will provide GFRIEND's "Rough" MIDI and text. And for the dataset to change the voice from the generated vocals, you can create a folder with the speaker's name in the `./datasets` folder and put voice data for Retrieval Voice Conversion (RVC) in it. The following shows the ./datasets format.
 
 ```
 BEGANSing
