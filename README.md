@@ -102,9 +102,6 @@ The `--audiosr` option up-samples a voice generated at 22050hz to 48000hz. Use t
 Audio samples at: https://soonbeomchoi.github.io/saebyulgan-blog/. Model was trained at RTX3090 24GB with batch size 32 for 2 days.
 ![BEGANSing tensorboard](https://user-images.githubusercontent.com/15067112/82179828-34aa5900-991a-11ea-9f73-b85aad109cea.png)
 
-# To-Do
-- Vocoder Change(Griffin-Lim -> HiFi-GAN) - Work In Progress!
-
 # References
 - g2p/korean_g2p.py from https://github.com/scarletcho/KoG2P
 - utils/midi_utils.py from Madmom, https://madmom.readthedocs.io/en/latest/
