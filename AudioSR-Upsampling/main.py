@@ -47,7 +47,7 @@ def remove_silence(duration, input_path, output_path):
 tmp_dir = tempfile.gettempdir()
 datasets_path = '../samples'
 wav_files = [f for f in os.listdir(datasets_path) if f.endswith('.wav')]
-audiosr = build_model(model_name='speech', device="auto")
+audiosr = build_model(model_name='basic', device="auto")
 
 for wav_file in wav_files:
     input_path = os.path.join(datasets_path, wav_file)
