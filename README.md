@@ -15,7 +15,6 @@ The system generates singing voice from a given text and MIDI in an end-to-end m
 - [Preprocessing & Training](#preprocessing--training)
 - [Usage](#usage)
 - [Results](#results)
-- [To-Do](#to-do)
 - [References](#references)
 
 ## Installation
