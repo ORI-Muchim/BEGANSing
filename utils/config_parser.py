@@ -7,6 +7,7 @@ class Config(object):
         if config_files is None:
             parser = argparse.ArgumentParser()
             parser.add_argument('-c', '--config', nargs="*", type=str, default=['./config/default.yml'])
+            parser.add_argument('-s', '--song', nargs="*", type=str, default='test')
             namespace, _ = parser.parse_known_args()
             config_files = namespace.config
 

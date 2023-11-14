@@ -1,91 +1,32 @@
 import os
 import requests
 
-hubert = './RVC/hubert_base.pt'
+def download_file(url, path):
+    response = requests.get(url, allow_redirects=True)
+    with open(path, 'wb') as file:
+        file.write(response.content)
 
 def get_model():
-    if not os.path.isfile(hubert):
-        url1 = 'https://github.com/ORI-Muchim/BEGANSing/releases/download/v1.0/f0D48k.pth'
-        url2 = 'https://github.com/ORI-Muchim/BEGANSing/releases/download/v1.0/f0G48k.pth'
-        url3 = 'https://github.com/ORI-Muchim/BEGANSing/releases/download/v1.0/hubert_base.pt'
-        url4 = 'https://github.com/ORI-Muchim/BEGANSing/releases/download/v1.0/rmvpe.pt'
-        url5 = 'https://github.com/ORI-Muchim/BEGANSing/releases/download/v1.0/latest_D.pt'
-        url6 = 'https://github.com/ORI-Muchim/BEGANSing/releases/download/v1.0/latest_G.pt'
-        url7 = 'https://github.com/ORI-Muchim/BEGANSing/releases/download/v1.0/default_train.yml'
-        url8 = 'https://github.com/ORI-Muchim/BEGANSing/releases/download/v1.0/do_02500000'
-        url9 = 'https://github.com/ORI-Muchim/BEGANSing/releases/download/v1.0/g_02500000'
+    base_dir = './RVC'
+    model_urls = {
+        'pretrained_v2/f0D48k.pth': 'https://github.com/ORI-Muchim/BEGANSing/releases/download/v1.0/f0D48k.pth',
+        'pretrained_v2/f0G48k.pth': 'https://github.com/ORI-Muchim/BEGANSing/releases/download/v1.0/f0G48k.pth',
+        'hubert_base.pt': 'https://github.com/ORI-Muchim/BEGANSing/releases/download/v1.0/hubert_base.pt',
+        'rmvpe.pt': 'https://github.com/ORI-Muchim/BEGANSing/releases/download/v1.0/rmvpe.pt',
+        'checkpoint/default/latest_D.pt': 'https://github.com/ORI-Muchim/BEGANSing/releases/download/v1.0/latest_D.pt',
+        'checkpoint/default/latest_G.pt': 'https://github.com/ORI-Muchim/BEGANSing/releases/download/v1.0/latest_G.pt',
+        'checkpoint/default/default_train.yml': 'https://github.com/ORI-Muchim/BEGANSing/releases/download/v1.0/default_train.yml',
+        'hifi_gan/default/do_02500000': 'https://github.com/ORI-Muchim/BEGANSing/releases/download/v1.0/do_02500000',
+        'hifi_gan/default/g_02500000': 'https://github.com/ORI-Muchim/BEGANSing/releases/download/v1.0/g_02500000',
+    }
 
-        print("Downloading Pretrained Discriminator Model...")
-        response1 = requests.get(url1, allow_redirects=True)
+    for filename, url in model_urls.items():
+        file_path = os.path.join(base_dir, filename)
+        if not os.path.isfile(file_path):
+            print(f"Downloading {filename}...")
+            download_file(url, file_path)
+            print(f"Saved {filename}.\n")
+        else:
+            print(f'Skipping Download... {filename} exists.')
 
-        print("Downloading Pretrained Generator Model...")
-        response2 = requests.get(url2, allow_redirects=True)
-        
-        print("Downloading Hubert Model...")
-        response3 = requests.get(url3, allow_redirects=True)
-        
-        print("Downloading RMVPE Model...")
-        response4 = requests.get(url4, allow_redirects=True)
-        
-        print("Downloading BEGANSing Checkpoint...")
-        response5 = requests.get(url5, allow_redirects=True)
-        response6 = requests.get(url6, allow_redirects=True)
-        response7 = requests.get(url7, allow_redirects=True)
-        
-        print("Downloading HiFi-GAN Checkpoint...")
-        response8 = requests.get(url8, allow_redirects=True)
-        response9 = requests.get(url9, allow_redirects=True)
-
-        directory = './RVC/pretrained_v2'
-        directory2 = './RVC'
-        directory3 = './checkpoint/default'
-        directory4 = 'hifi_gan/default'
-
-        pretrained_discriminator_model = os.path.join(directory, 'f0D48k.pth')
-        pretrained_generator_model = os.path.join(directory, 'f0G48k.pth')
-        hubert_model = os.path.join(directory2, 'hubert_base.pt')
-        rmvpe_model = os.path.join(directory2, 'rmvpe.pt')
-        begansing_check_D_model = os.path.join(directory3, 'latest_D.pt')
-        begansing_check_G_model = os.path.join(directory3, 'latest_G.pt')
-        begansing_config = os.path.join(directory3, 'default_train.yml')
-        hifigan_D_model = os.path.join(directory4, 'do_02500000')
-        hifigan_G_model = os.path.join(directory4, 'g_02500000')
-        
-        with open(pretrained_discriminator_model, 'wb') as file:
-            file.write(response1.content)
-        print("Saving Pretrained Discriminator Model...")
-
-        with open(pretrained_generator_model, 'wb') as file:
-            file.write(response2.content)
-        print("Saving Pretrained Generator Model...")
-        
-        with open(hubert_model, 'wb') as file:
-            file.write(response3.content)
-        print("Saving Hubert Model...")
-        
-        with open(rmvpe_model, 'wb') as file:
-            file.write(response4.content)
-        print("Saving RMVPE Model...\n")
-        
-        with open(begansing_check_D_model, 'wb') as file:
-            file.write(response5.content)
-        print("Saving BEGANSing Discriminator Model...")
-        
-        with open(begansing_check_G_model, 'wb') as file:
-            file.write(response6.content)
-        print("Saving BEGANSing Generator Model...")
-        
-        with open(begansing_config, 'wb') as file:
-            file.write(response7.content)
-        print("Saving BEGANSing Config File...")
-        
-        with open(hifigan_D_model, 'wb') as file:
-            file.write(response8.content)
-        print("Saving HiFi-GAN Discriminator Model...")
-        
-        with open(hifigan_G_model, 'wb') as file:
-            file.write(response9.content)
-        print("Saving HiFi-GAN Generator Model...")
-        
-    else:
-        print('Skipping Download... Model exists.')
+get_model()

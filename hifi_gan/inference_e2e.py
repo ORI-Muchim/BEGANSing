@@ -61,8 +61,8 @@ def main():
     print('Initializing Inference Process..')
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--input_mels_dir', default='test_mel_files')
-    parser.add_argument('--output_dir', default='generated_files_from_mel')
+    parser.add_argument('--input_mels_dir', default='../mel_dir')
+    parser.add_argument('--output_dir', default='../samples')
     parser.add_argument('--checkpoint_file', required=True)
     a = parser.parse_args()
 

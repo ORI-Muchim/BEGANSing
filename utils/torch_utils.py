@@ -56,11 +56,8 @@ def load_weights(checkpoint_path):
 
     return state_dict
 
-def save_checkpoint(checkpoint_path, model, epoch, optimizer=None, learning_rate=None, iteration=None, verbose=False):
-    checkpoint = {
-        'state_dict': model.state_dict(),
-        'epoch': epoch
-    }
+def save_checkpoint(checkpoint_path, model, optimizer=None, learning_rate=None, iteration=None, verbose=False):
+    checkpoint = {'state_dict': model.state_dict()}
     if optimizer is not None:
         checkpoint['optimizer'] = optimizer.state_dict()
     if learning_rate is not None:
@@ -71,7 +68,7 @@ def save_checkpoint(checkpoint_path, model, epoch, optimizer=None, learning_rate
     torch.save(checkpoint, checkpoint_path)
 
     if verbose: 
-        print("Saving checkpoint to %s" % checkpoint_path)
+        print("Saving checkpoint to %s" % (checkpoint_path))
 
 def load_checkpoint(checkpoint_path, model, optimizer=None, verbose=False):
     assert os.path.isfile(checkpoint_path)
@@ -80,7 +77,7 @@ def load_checkpoint(checkpoint_path, model, optimizer=None, verbose=False):
     if 'state_dict' in checkpoint:
         state_dict = checkpoint['state_dict']
     else:
-        raise AssertionError("No model weights found in checkpoint: %s" % checkpoint_path)
+        raise AssertionError("No model weight found in checkpoint, %s" % (checkpoint_path))
 
     if from_parallel(state_dict): 
         state_dict = unwrap_parallel(state_dict)
@@ -88,9 +85,6 @@ def load_checkpoint(checkpoint_path, model, optimizer=None, verbose=False):
     model.load_state_dict(state_dict)
 
     objects = [model]
-    if 'epoch' in checkpoint:
-        epoch = checkpoint['epoch']
-        objects.append(epoch)
     if 'optimizer' in checkpoint and optimizer is not None:
         optimizer.load_state_dict(checkpoint['optimizer'])
         objects.append(optimizer)
@@ -102,6 +96,9 @@ def load_checkpoint(checkpoint_path, model, optimizer=None, verbose=False):
         objects.append(iteration)
 
     if verbose:
-        print("Loaded checkpoint from %s" % checkpoint_path)
+        print("Loaded checkpoint from %s" % (checkpoint_path))
+
+    if len(objects) == 1:
+        objects = objects[0]
 
     return objects

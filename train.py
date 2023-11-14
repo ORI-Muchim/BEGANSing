@@ -8,13 +8,13 @@ import torch.nn as nn
 from torch.optim.lr_scheduler import StepLR
 from tqdm import tqdm
 
-from utils.config_parser import Config
-from utils.file_utils import create_path
-from utils.torch_utils import set_device, save_checkpoint, load_checkpoint
+from config_parser import Config
+from file_utils import create_path
+from torch_utils import set_device, save_checkpoint
 
 import dataprocess
-from model.models import Generator, Discriminator
-from utils.logger import Logger
+from models import Generator, Discriminator
+from logger import Logger
 
 class AverageMeter(object):
     def __init__(self):
@@ -59,22 +59,6 @@ def main():
     schedulerG = StepLR(optimizerG, step_size=step_size, gamma=config.decay_factor)
     schedulerD = StepLR(optimizerD, step_size=step_size, gamma=config.decay_factor)
     
-    checkpoint_G = os.path.join(checkpoint_path, 'latest_G.pt')
-    checkpoint_D = os.path.join(checkpoint_path, 'latest_D.pt')
-    
-        
-    if os.path.exists(checkpoint_G) and os.path.exists(checkpoint_D):
-        print("Loading checkpoints...")
-        G, optimizerG, learning_rate_G, iteration_G = load_checkpoint(checkpoint_G, G, optimizerG, verbose=True)
-        D, optimizerD, learning_rate_D, iteration_D = load_checkpoint(checkpoint_D, D, optimizerD, verbose=True)
-        
-        epoch = iteration_G // len(dataloader.train)
-        print("Resuming from epoch %d" % epoch)
-    else:
-        epoch = 0
-        print("No checkpoint found, starting from epoch 0")
-
-    
     k = 0.0
     M = AverageMeter()
     lossG_train = AverageMeter()
@@ -82,7 +66,7 @@ def main():
     lossD_train = AverageMeter()
 
     print('Training start')
-    for epoch in range(epoch, config.stop_epoch + 1):
+    for epoch in range(config.stop_epoch + 1):
         # Training Loop
         G.train()
         D.train()
@@ -143,19 +127,13 @@ def main():
         lossG_valid.reset()
         lossD_train.reset()
 
-    def save_model_and_optimizer(epoch, G, D, optimizerG, optimizerD, lossG_train, lossD_train, checkpoint_path, learn_rate, config):
-        def save(model, optimizer, loss, model_name):
-            savename = os.path.join(checkpoint_path, model_name)
-            save_checkpoint(savename, model, epoch, optimizer, learn_rate, loss.steps, verbose=True)
-
-        save(G, optimizerG, lossG_train, 'latest_G.pt')
-        save(D, optimizerD, lossD_train, 'latest_D.pt')
-
-        if epoch % config.save_epoch == 0:
-            save(G, optimizerG, lossG_train, f'epoch{epoch}_G.pt')
-            save(D, optimizerD, lossD_train, f'epoch{epoch}_D.pt')
-
-    save_model_and_optimizer(epoch, G, D, optimizerG, optimizerD, lossG_train, lossD_train, checkpoint_path, learn_rate, config)
+        savename = os.path.join(checkpoint_path, 'latest_')
+        save_checkpoint(savename + 'G.pt', G, optimizerG, learn_rate, lossG_train.steps)
+        save_checkpoint(savename + 'D.pt', D, optimizerD, learn_rate, lossD_train.steps)
+        if epoch%config.save_epoch == 0:
+            savename = os.path.join(checkpoint_path, 'epoch' + str(epoch) + '_')
+            save_checkpoint(savename + 'G.pt', G, optimizerG, learn_rate, lossG_train.steps)
+            save_checkpoint(savename + 'D.pt', D, optimizerD, learn_rate, lossD_train.steps)
 
     print('Training finished')
 
